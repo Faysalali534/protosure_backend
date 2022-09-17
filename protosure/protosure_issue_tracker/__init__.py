@@ -1,0 +1,1 @@
+default_app_config = 'protosure_issue_tracker.apps.ProtosureIssueTrackerConfig'
