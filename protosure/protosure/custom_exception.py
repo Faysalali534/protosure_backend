@@ -1,6 +1,6 @@
 class ExternalServiceError(Exception):
 
-    def __init__(self, error_code=500, message="Github reported issue , please retry or contact admin"):
+    def __init__(self, error_code=400, message="Github reported issue , please retry or contact admin"):
         self.message = message
         self.error_code = error_code
 

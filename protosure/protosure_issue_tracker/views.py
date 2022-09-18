@@ -1,3 +1,4 @@
+from protosure.custom_exception import ExternalServiceError
 from protosure_issue_tracker.models import IssueMetadata
 from protosure_issue_tracker.serializers import IssueMetadataSerializer, IssueCommentsSerializer
 from rest_framework.views import APIView
@@ -28,10 +29,13 @@ class IssueComment(APIView):
         sync_issues.send(
             sender=request.headers.get("authorization"), owner=owner, repo=repo
         )
-        serializer = IssueCommentsSerializer(
-            data=request.data, context=dict(issue_number=issue, owner=owner, repo=repo)
-        )
-        serializer.is_valid(raise_exception=False)
-        serializer.save()
-        return Response(serializer.data)
-
+        try:
+            serializer = IssueCommentsSerializer(
+                data=request.data,
+                context=dict(issue_number=issue, owner=owner, sender=request.headers.get('authorization'), repo=repo)
+            )
+            serializer.is_valid(raise_exception=False)
+            serializer.save()
+            return Response(serializer.data)
+        except ExternalServiceError as e:
+            return Response(dict(error=e.message), status=e.error_code)

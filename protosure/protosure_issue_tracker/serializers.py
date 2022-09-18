@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from protosure.Signals import insert_comments_to_issue
 from protosure_issue_tracker.models import IssueMetadata, IssueComments
 
 
@@ -39,3 +40,14 @@ class IssueCommentsSerializer(serializers.ModelSerializer):
         if not does_issue_number_exist:
             raise serializers.ValidationError("The issue doesnt exist")
         return data
+
+    def create(self, validated_data):
+        comment_info = insert_comments_to_issue.send(
+            issue_id=self.context["issue_number"],
+            sender=self.context["sender"],
+            owner=self.context["owner"],
+            repo=self.context["repo"],
+            data=dict(self.validated_data),
+        )
+        comment_info[0][1]['id']
+        print(comment_info)

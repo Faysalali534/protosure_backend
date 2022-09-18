@@ -59,3 +59,4 @@ class IssueMetadata(models.Model):
 class IssueComments(models.Model):
     issue = models.ForeignKey(RepositoryInfo, on_delete=models.CASCADE)
     comment = models.TextField(null=True, default=None)
+    comment_number = models.CharField(max_length=30, null=False, default='')

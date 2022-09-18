@@ -17,7 +17,7 @@ def create_github_issues(sender, owner, repo, **kwargs):
 
 @receiver(Signals.insert_comments_to_issue)
 def create_comment_for_issue(sender, owner, repo, issue_id, **kwargs):
-    insert_comment_to_issue(
+    comment_info = insert_comment_to_issue(
         sender=sender, url=f"{settings.GITHUB_REPO}/{owner}/{repo}/issues/{issue_id}/comments", payload=kwargs['data']
     )
-
+    return comment_info
