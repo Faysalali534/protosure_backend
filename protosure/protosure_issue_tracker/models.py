@@ -1,6 +1,8 @@
+import datetime
+
 from django.db import models
 
-# Create your models here.
+
 from django.db.models import Q
 from django.forms import URLField
 
@@ -56,7 +58,38 @@ class IssueMetadata(models.Model):
     objects = IssueMetadataCustomManager()
 
 
+class IssueCommentsCustomManager(models.Manager):
+    def _get_date_condition(self, date):
+        if date:
+            return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        return None
+
+    def filter_conditions(self, owner, repository, **kwargs):
+        condition_1 = Q(issue__repository__repository_name__exact=repository)
+        condition_2 = Q(issue__repository__repository_owner__exact=owner)
+        query_mapper = dict(
+            creation_date=Q(
+                issue__creation_date__exact=self._get_date_condition(
+                    date=kwargs.get("creation_date")
+                )
+            ),
+            status=Q(issue__status__iexact=kwargs.get("status")),
+            number=Q(issue__number__exact=kwargs.get("number")),
+            title=Q(issue__title__icontains=kwargs.get("title")),
+            description=Q(issue__description__icontains=kwargs.get("description")),
+            comment=Q(comment__icontains=kwargs.get("comment")),
+        )
+
+        final_query = condition_1 & condition_2
+        for field, value_to_search in kwargs.items():
+            if value_to_search:
+                final_query &= query_mapper.get(field)
+        query_result = self.filter(final_query)
+        return query_result
+
+
 class IssueComments(models.Model):
     issue = models.ForeignKey(IssueMetadata, on_delete=models.CASCADE)
     comment = models.TextField(null=True, default=None)
     comment_number = models.CharField(max_length=30, null=False, default='')
+    objects = IssueCommentsCustomManager()
