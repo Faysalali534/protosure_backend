@@ -8,11 +8,7 @@ from rest_framework import status
 from rest_framework import exceptions as drf_exceptions
 
 
-# Create your views here.
 class RepoInfo(APIView):
-    """
-    List all snippets, or create a new snippet.
-    """
 
     def get(self, request, owner, repo, format=None):
         sync_issues.send(sender=request.headers.get('authorization'), owner=owner, repo=repo)
@@ -21,11 +17,7 @@ class RepoInfo(APIView):
         return Response(serializer.data)
 
 
-# Create your views here.
 class IssueComment(APIView):
-    """
-    List all snippets, or create a new snippet.
-    """
 
     def post(self, request, owner, repo, issue, format=None):
         sync_issues.send(
