@@ -42,4 +42,5 @@ class IssueComment(APIView):
         except ExternalServiceError as e:
             return Response(dict(error=e.message), status=e.error_code)
         except drf_exceptions.ValidationError as e:
+            # TODO add its test case
             return Response(dict(error=str(e.detail['non_field_errors'][0])), status=status.HTTP_400_BAD_REQUEST)
