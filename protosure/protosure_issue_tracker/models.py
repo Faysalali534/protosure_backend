@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 
-# Create your models here.
+
 from django.db.models import Q
 from django.forms import URLField
 
