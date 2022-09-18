@@ -4,6 +4,7 @@ from protosure_issue_tracker.serializers import IssueMetadataSerializer, IssueCo
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from protosure.Signals import sync_issues
+from rest_framework import status
 
 
 # Create your views here.
@@ -36,6 +37,6 @@ class IssueComment(APIView):
             )
             serializer.is_valid(raise_exception=False)
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         except ExternalServiceError as e:
             return Response(dict(error=e.message), status=e.error_code)

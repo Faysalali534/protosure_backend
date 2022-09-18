@@ -39,6 +39,7 @@ class IssueCommentsSerializer(serializers.ModelSerializer):
 
         if not does_issue_number_exist:
             raise serializers.ValidationError("The issue doesnt exist")
+        self.context['issue_metadata_instance'] = does_issue_number_exist[0]
         return data
 
     def create(self, validated_data):
@@ -49,5 +50,9 @@ class IssueCommentsSerializer(serializers.ModelSerializer):
             repo=self.context["repo"],
             data=dict(self.validated_data),
         )
-        comment_info[0][1]['id']
-        print(comment_info)
+        return IssueComments.objects.create(
+            issue=self.context["issue_metadata_instance"],
+            comment=self.validated_data["comment"],
+            comment_number=comment_info[0][1]["id"],
+        )
+

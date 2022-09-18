@@ -6,10 +6,11 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 
-
 # Create your tests here.
+from protosure_issue_tracker.models import IssueComments
 
-class TokenGenerationTestCase(TestCase):
+
+class GithubSuccessScenarioTestCase(TestCase):
     DOJO_PLATFORM_USERS_INSTANCE = None
     client = APIClient()
     ACCESS_TOKEN = ''
@@ -80,7 +81,7 @@ class TokenGenerationTestCase(TestCase):
     }
 
     def setUp(self):
-        TokenGenerationTestCase.client.credentials(
+        GithubSuccessScenarioTestCase.client.credentials(
             HTTP_AUTHORIZATION='Bearer ' + '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')
 
     @patch('protosure_issue_tracker.services.requests.get')
@@ -90,13 +91,20 @@ class TokenGenerationTestCase(TestCase):
         mock_get.return_value.json.return_value = self.mock_data['get_latest_issues']
         api_url = reverse('all_issues', kwargs={'owner': 'Faysalali534', 'repo': "Backend-Task"})
 
-        response = TokenGenerationTestCase.client.get(path=api_url, format='json')
+        response = GithubSuccessScenarioTestCase.client.get(path=api_url, format='json')
         assert response.status_code == 200
         assert response.data
 
     def test_add_comment(self):
-        api_url = reverse('issue_comment', kwargs={'issue': 1, 'owner': 'Faysalali534', 'repo': "Backend-Task"})
-        data = {"comment": "changing comment"}
-        response = TokenGenerationTestCase.client.post(path=api_url, data=data, format='json')
-        assert response.status_code == 200
+        kwargs_data = {'issue': 1, 'owner': 'Faysalali534', 'repo': "Backend-Task"}
+        api_url = reverse('issue_comment', kwargs=kwargs_data)
+        data = {"comment": "changing comment for test"}
+        response = GithubSuccessScenarioTestCase.client.post(path=api_url, data=data, format='json')
+        issue_comments_instance = IssueComments.objects.filter(
+            issue__number__exact=kwargs_data["issue"],
+            issue__repository__repository_name__exact=kwargs_data["repo"],
+            issue__repository__repository_owner__exact=kwargs_data["owner"],
+        )
+        assert response.status_code == 201
         assert response.data
+        assert issue_comments_instance[0].comment == data['comment']
