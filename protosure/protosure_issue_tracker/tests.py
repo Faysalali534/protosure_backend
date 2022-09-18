@@ -84,14 +84,19 @@ class TokenGenerationTestCase(TestCase):
             HTTP_AUTHORIZATION='Bearer ' + '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')
 
     @patch('protosure_issue_tracker.services.requests.get')
-    def test_token(self, mock_get):
-        """test task creation"""
-
+    def test_issues_fetch_feature(self, mock_get):
         mock_get.return_value.ok = True
 
         mock_get.return_value.json.return_value = self.mock_data['get_latest_issues']
         api_url = reverse('all_issues', kwargs={'owner': 'Faysalali534', 'repo': "Backend-Task"})
 
         response = TokenGenerationTestCase.client.get(path=api_url, format='json')
+        assert response.status_code == 200
+        assert response.data
+
+    def test_add_comment(self):
+        api_url = reverse('issue_comment', kwargs={'issue': 1, 'owner': 'Faysalali534', 'repo': "Backend-Task"})
+        data = {"comment": "changing comment"}
+        response = TokenGenerationTestCase.client.post(path=api_url, data=data, format='json')
         assert response.status_code == 200
         assert response.data

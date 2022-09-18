@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from protosure_issue_tracker.models import IssueMetadata
+from protosure_issue_tracker.models import IssueMetadata, IssueComments
 
 
 class IssueMetadataSerializer(serializers.ModelSerializer):
@@ -21,3 +21,21 @@ class IssueMetadataSerializer(serializers.ModelSerializer):
         if repository_info:
             self.validated_data['repository'] = repository_info
             IssueMetadata.objects.create(**self.validated_data)
+
+
+class IssueCommentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IssueComments
+        fields = '__all__'
+        depth = 4
+
+    def validate(self, data):
+        does_issue_number_exist = IssueMetadata.objects.does_issue_number_exist(
+            issue_number=self.context["issue_number"],
+            owner=self.context["owner"],
+            repository=self.context["repo"],
+        )
+
+        if not does_issue_number_exist:
+            raise serializers.ValidationError("The issue doesnt exist")
+        return data

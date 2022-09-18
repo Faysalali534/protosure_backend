@@ -33,5 +33,5 @@ def insert_repo_issue_metadata(repository_info, github_issues_data):
                 issue_metadata_serializer = IssueMetadataSerializer(data=data)
                 issue_metadata_serializer.is_valid(raise_exception=True)
                 issue_metadata_serializer.save(repository_info=repository_info)
-        except Exception as e:
-            print(e)
+        except Exception :
+            pass
