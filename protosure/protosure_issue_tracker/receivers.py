@@ -2,7 +2,7 @@ from django.dispatch import receiver
 from protosure import Signals
 from django.conf import settings
 
-from protosure_issue_tracker.services import get_recent_github_issues
+from protosure_issue_tracker.services import get_recent_github_issues, insert_comment_to_issue
 from protosure_issue_tracker import utils
 
 
@@ -13,3 +13,11 @@ def create_github_issues(sender, owner, repo, **kwargs):
     )
     repository_info = utils.get_repo_info_if_exist_or_create_new_info(owner=owner, repo=repo)
     utils.insert_repo_issue_metadata(repository_info=repository_info, github_issues_data=github_issues_data)
+
+
+@receiver(Signals.insert_comments_to_issue)
+def create_comment_for_issue(sender, owner, repo, issue_id, **kwargs):
+    comment_info = insert_comment_to_issue(
+        sender=sender, url=f"{settings.GITHUB_REPO}/{owner}/{repo}/issues/{issue_id}/comments", payload=kwargs['data']
+    )
+    return comment_info

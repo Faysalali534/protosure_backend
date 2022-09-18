@@ -29,6 +29,13 @@ class IssueMetadataCustomManager(models.Manager):
         query_result = self.filter(condition_1 & condition_2)
         return query_result
 
+    def does_issue_number_exist(self, issue_number, repository, owner):
+        condition_1 = Q(number__exact=issue_number)
+        condition_2 = Q(repository__repository_name__exact=repository)
+        condition_3 = Q(repository__repository_owner__exact=owner)
+        query_result = self.filter(condition_1 & condition_2 & condition_3)
+        return query_result
+
 
 class IssueMetadata(models.Model):
     STATES = [
@@ -50,5 +57,6 @@ class IssueMetadata(models.Model):
 
 
 class IssueComments(models.Model):
-    issue = models.ForeignKey(RepositoryInfo, on_delete=models.CASCADE)
+    issue = models.ForeignKey(IssueMetadata, on_delete=models.CASCADE)
     comment = models.TextField(null=True, default=None)
+    comment_number = models.CharField(max_length=30, null=False, default='')
