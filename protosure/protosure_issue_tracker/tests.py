@@ -16,6 +16,7 @@ class GithubSuccessScenarioTestCase(TestCase):
     ACCESS_TOKEN = ''
     User = None
     mock_data = {
+        'get_comment_data': {"id": 1250318846},
         'get_latest_issues': [
             {
                 "url": "https://api.github.com/repos/Faysalali534/Backend-Task/issues/1",
@@ -82,7 +83,7 @@ class GithubSuccessScenarioTestCase(TestCase):
 
     def setUp(self):
         GithubSuccessScenarioTestCase.client.credentials(
-            HTTP_AUTHORIZATION='Bearer ' + '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')
+            HTTP_AUTHORIZATION='Bearer ' + 'ghp_awwNOmIgcj87H1Yc21r1hO8oNzOhtC4eypSF')
 
     @patch('protosure_issue_tracker.services.requests.get')
     def test_issues_fetch_feature(self, mock_get):
@@ -95,7 +96,13 @@ class GithubSuccessScenarioTestCase(TestCase):
         assert response.status_code == 200
         assert response.data
 
-    def test_add_comment(self):
+    @patch('protosure_issue_tracker.services.requests.post')
+    @patch('protosure_issue_tracker.services.requests.get')
+    def test_add_comment(self, mock_get, mock_post):
+        mock_get.return_value.ok = True
+        mock_post.return_value.ok = True
+        mock_get.return_value.json.return_value = self.mock_data['get_latest_issues']
+        mock_post.return_value.json.return_value = self.mock_data['get_comment_data']
         kwargs_data = {'issue': 1, 'owner': 'Faysalali534', 'repo': "Backend-Task"}
         api_url = reverse('issue_comment', kwargs=kwargs_data)
         data = {"comment": "changing comment for test"}
