@@ -22,6 +22,14 @@ class RepositoryInfo(models.Model):
     objects = RepositoryInfoCustomManager()
 
 
+class IssueMetadataCustomManager(models.Manager):
+    def is_metadata_being_repeated(self, issue_number, repository):
+        condition_1 = Q(number=issue_number)
+        condition_2 = Q(repository=repository)
+        query_result = self.filter(condition_1 & condition_2)
+        return query_result
+
+
 class IssueMetadata(models.Model):
     STATES = [
         ('Draft', 'Draft'),
@@ -38,6 +46,7 @@ class IssueMetadata(models.Model):
     comment_count = models.IntegerField(default=0)
     comments_url = URLField(max_length=300)
     repository = models.ForeignKey(RepositoryInfo, on_delete=models.CASCADE)
+    objects = IssueMetadataCustomManager()
 
 
 class IssueComments(models.Model):
