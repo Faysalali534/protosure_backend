@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from protosure.Signals import sync_issues
 from rest_framework import status
+from rest_framework import exceptions as drf_exceptions
 
 
 # Create your views here.
@@ -35,8 +36,10 @@ class IssueComment(APIView):
                 data=request.data,
                 context=dict(issue_number=issue, owner=owner, sender=request.headers.get('authorization'), repo=repo)
             )
-            serializer.is_valid(raise_exception=False)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except ExternalServiceError as e:
             return Response(dict(error=e.message), status=e.error_code)
+        except drf_exceptions.ValidationError as e:
+            return Response(dict(error=str(e.detail['non_field_errors'][0])), status=status.HTTP_400_BAD_REQUEST)
