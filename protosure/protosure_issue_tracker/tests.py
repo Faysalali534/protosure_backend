@@ -65,3 +65,23 @@ class GithubSuccessScenarioTestCase(TestCase):
         assert response.status_code == 201
         assert response.data
         assert issue_comments_instance[0].comment == data['comment']
+
+    @patch('protosure_issue_tracker.services.requests.post')
+    @patch('protosure_issue_tracker.services.requests.get')
+    def test_filter_fields(self, mock_get, mock_post):
+        mock_get.return_value.ok = True
+        mock_post.return_value.ok = True
+        mock_get.return_value.json.return_value = self.mock_data['get_latest_issues']
+        mock_post.return_value.json.return_value = self.mock_data['get_comment_data']
+        kwargs_data = {'issue': 1, 'owner': 'Faysalali534', 'repo': "Backend-Task"}
+        api_url = reverse('issue_comment', kwargs=kwargs_data)
+        data = {"comment": "changing comment for test"}
+        response = GithubSuccessScenarioTestCase.client.post(path=api_url, data=data, format='json')
+        issue_comments_instance = IssueComments.objects.filter(
+            issue__number__exact=kwargs_data["issue"],
+            issue__repository__repository_name__exact=kwargs_data["repo"],
+            issue__repository__repository_owner__exact=kwargs_data["owner"],
+        )
+        assert response.status_code == 201
+        assert response.data
+        assert issue_comments_instance[0].comment == data['comment']
