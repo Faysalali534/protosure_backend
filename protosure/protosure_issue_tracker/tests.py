@@ -7,7 +7,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 # Create your tests here.
-from protosure_issue_tracker.models import IssueComments
+from protosure_issue_tracker.models import IssueComments, IssueMetadata
 
 
 class GithubSuccessScenarioTestCase(TestCase):
@@ -84,3 +84,23 @@ class GithubSuccessScenarioTestCase(TestCase):
         assert response.status_code == 200
         assert response.data[0]['issue']['status'].lower() == 'open'
 
+    @patch('protosure_issue_tracker.services.requests.post')
+    @patch('protosure_issue_tracker.services.requests.get')
+    def test_filter_fields(self, mock_get, mock_post):
+        mock_get.return_value.ok = True
+        mock_post.return_value.ok = True
+        mock_get.return_value.json.return_value = self.mock_data['get_latest_issues']
+        mock_post.return_value.json.return_value = self.mock_data['get_comment_data']
+        kwargs_data = {'owner': 'Faysalali534', 'repo': "Backend-Task", "issue": 1}
+        data = {
+
+            "title": "Found 3 bug",
+
+        }
+        api_url = reverse('issue_update', kwargs=kwargs_data)
+        issue_metadata_before_update = IssueMetadata.objects.filter(title__exact=data['title'])
+        assert not issue_metadata_before_update
+        response = GithubSuccessScenarioTestCase.client.patch(path=api_url, data=data, format='json')
+        assert response.status_code == 200
+        issue_metadata_after_update = IssueMetadata.objects.filter(title__exact=data['title'])
+        assert issue_metadata_after_update

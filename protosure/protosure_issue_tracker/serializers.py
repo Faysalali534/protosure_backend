@@ -10,18 +10,28 @@ class IssueMetadataSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 3
 
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.status = validated_data.get('status', instance.status)
+        instance.description = validated_data.get('description', instance.description)
+        instance.save()
+        return instance
+
     def validate(self, data):
-        is_metadata_being_repeated = IssueMetadata.objects.is_metadata_being_repeated(issue_number=data['number'],
-                                                                                      repository=self.initial_data[
-                                                                                          'repository'])
-        if is_metadata_being_repeated:
-            raise serializers.ValidationError("The issue is already there with this number")
+        if not self.context.get('update_date'):
+            is_metadata_being_repeated = IssueMetadata.objects.is_metadata_being_repeated(issue_number=data['number'],
+                                                                                          repository=self.initial_data[
+                                                                                              'repository'])
+            if is_metadata_being_repeated:
+                raise serializers.ValidationError("The issue is already there with this number")
         return data
 
     def save(self, repository_info=None):
         if repository_info:
             self.validated_data['repository'] = repository_info
             IssueMetadata.objects.create(**self.validated_data)
+        if self.instance is not None:
+            self.instance = self.update(self.instance, self.validated_data)
 
 
 class IssueCommentsSerializer(serializers.ModelSerializer):
@@ -55,4 +65,3 @@ class IssueCommentsSerializer(serializers.ModelSerializer):
             comment=self.validated_data["comment"],
             comment_number=comment_info[0][1]["id"],
         )
-

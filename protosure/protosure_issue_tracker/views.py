@@ -1,3 +1,5 @@
+from django.http import Http404
+
 from protosure.custom_exception import ExternalServiceError
 from protosure_issue_tracker.models import IssueMetadata, IssueComments
 from protosure_issue_tracker.serializers import IssueMetadataSerializer, IssueCommentsSerializer
@@ -15,6 +17,32 @@ class RepoInfo(APIView):
         repo_issues_metadata = IssueMetadata.objects.all()
         serializer = IssueMetadataSerializer(repo_issues_metadata, many=True)
         return Response(serializer.data)
+
+
+class IssueUpdate(APIView):
+    def get_object(self, owner, repo, issue):
+        issue_metadata_instance = IssueMetadata.objects.filter(repository__repository_owner__exact=owner,
+                                                               repository__repository_name__exact=repo,
+                                                               number__exact=issue)
+        if issue_metadata_instance:
+            return issue_metadata_instance[0]
+        raise Http404
+
+    def patch(self, request, owner, repo, issue, format=None):
+        try:
+            sync_issues.send(sender=request.headers.get('authorization'), owner=owner, repo=repo)
+            issue_instance = self.get_object(owner, repo, issue)
+            serializer = IssueMetadataSerializer(issue_instance, data=request.data, partial=True,
+                                                 context=dict(update_date=True))
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        except ExternalServiceError as e:
+            return Response(dict(error=e.message), status=e.error_code)
+        except drf_exceptions.ValidationError as e:
+            return Response(dict(error=str(e.detail['non_field_errors'][0])), status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
 
 
 class IssueComment(APIView):
