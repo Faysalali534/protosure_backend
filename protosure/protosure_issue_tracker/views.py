@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from protosure.Signals import sync_issues
 from rest_framework import status, generics
 from rest_framework import exceptions as drf_exceptions
+from django.db.utils import IntegrityError as db_constraint
 
 
 class RepoInfo(APIView):
@@ -40,9 +41,14 @@ class IssueUpdate(APIView):
         except ExternalServiceError as e:
             return Response(dict(error=e.message), status=e.error_code)
         except drf_exceptions.ValidationError as e:
-            return Response(dict(error=str(e.detail['non_field_errors'][0])), status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            print(e)
+            error_for_field = [e.detail.get(field_data.attname) for field_data in IssueMetadata._meta.fields if
+                               e.detail.get(field_data.attname)]
+
+            error_msg = error_for_field[0] if error_for_field else e.detail.get('non_field_errors')
+
+            return Response(dict(error=str(error_msg[0])), status=status.HTTP_400_BAD_REQUEST)
+        except db_constraint:
+            return Response(dict(error='Status for this issue cannot be closed'), status=status.HTTP_400_BAD_REQUEST)
 
 
 class IssueComment(APIView):
