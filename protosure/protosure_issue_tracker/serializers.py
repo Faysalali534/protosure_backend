@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from protosure.Signals import insert_comments_to_issue
+from protosure.Signals import insert_comments_to_issue, update_issue
 from protosure.custom_exception import concurrencyError
 from protosure_issue_tracker.models import IssueMetadata, IssueComments
 
@@ -13,6 +13,13 @@ class IssueMetadataSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # This version is used to handle concurrency issue
+        update_issue.send(
+            issue_id=self.context["issue_number"],
+            sender=self.context["sender"],
+            owner=self.context["owner"],
+            repo=self.context["repo"],
+            data=dict(self.validated_data),
+        )
         initial_version = instance.version
         issue_metadata = IssueMetadata.objects.filter(pk=instance.pk)
 

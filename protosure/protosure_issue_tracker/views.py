@@ -33,8 +33,18 @@ class IssueUpdate(APIView):
         try:
             sync_issues.send(sender=request.headers.get('authorization'), owner=owner, repo=repo)
             issue_instance = self.get_object(owner, repo, issue)
-            serializer = IssueMetadataSerializer(issue_instance, data=request.data, partial=True,
-                                                 context=dict(update_date=True))
+            serializer = IssueMetadataSerializer(
+                issue_instance,
+                data=request.data,
+                partial=True,
+                context=dict(
+                    update_date=True,
+                    issue_number=issue,
+                    owner=owner,
+                    sender=request.headers.get("authorization"),
+                    repo=repo,
+                ),
+            )
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
@@ -50,6 +60,8 @@ class IssueUpdate(APIView):
         except db_constraint:
             return Response(dict(error='Status for this issue cannot be closed'), status=status.HTTP_400_BAD_REQUEST)
         except concurrencyError as e:
+            return Response(dict(error=e.message), status=e.error_code)
+        except ExternalServiceError as e:
             return Response(dict(error=e.message), status=e.error_code)
 
 
