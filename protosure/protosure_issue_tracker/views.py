@@ -1,4 +1,7 @@
+import json
+
 from django.http import Http404
+from rest_framework.decorators import api_view
 
 from protosure.custom_exception import ExternalServiceError, concurrencyError
 from protosure_issue_tracker.models import IssueMetadata, IssueComments
@@ -136,3 +139,21 @@ class IssueDataFilter(generics.ListAPIView):
         return IssueComments.objects.filter_conditions(owner=owner, repository=repo, creation_date=creation_date,
                                                        status=status, number=number, title=title,
                                                        description=description, comment=comment)
+
+
+@api_view(['POST'])
+def capture_webhook_data(request):
+    if request.method == 'POST':
+        data = request.data
+
+        if data['action'] == 'edited':
+            issue_number = data['issue']['number']
+            owner = data['sender']['login']
+            repo_name = data['repository']['name']
+            issue_metadata_instance = IssueMetadata.objects.does_issue_number_exist(repository=repo_name, owner=owner,
+                                                                                    issue_number=issue_number)
+            # the signal will process recent changes
+            issue_metadata_instance.delete()
+
+            return Response({"message": "processed"})
+    return Response({"message": "done"})
