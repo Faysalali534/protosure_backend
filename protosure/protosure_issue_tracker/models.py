@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 
-from django.db.models import Q, When
+from django.db.models import Q
 from django.forms import URLField
 
 
@@ -58,10 +58,15 @@ class IssueMetadata(models.Model):
 
     class Meta:
         constraints = [
-
             models.CheckConstraint(
-                check=(~Q(title__contains="WIP") & ~Q(title__contains="DRAFT") & ~Q(status="Closed")),
+                check=~Q(title__contains="WIP") | ~Q(title__contains="DRAFT") & Q(
+                    status__in=["Draft", "Open", "Merged"]),
                 name='title_status_IssueMetadata_should_not_close_check'
+            ),
+            models.CheckConstraint(
+                check=~Q(title__contains="DRAFT") | ~Q(title__contains="WIP") & Q(
+                    status__in=["Draft", "Open", "Merged"]),
+                name='DRAFT_should_not_be_close'
             )
         ]
 
