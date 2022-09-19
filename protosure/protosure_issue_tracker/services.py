@@ -29,3 +29,23 @@ def insert_comment_to_issue(url, sender, payload={}):
         return response.json()
     else:
         raise ExternalServiceError()
+
+
+def update_issue(url, sender, payload={}):
+    if payload.get('description'):
+        payload['body'] = payload.pop('description')
+    if payload.get('status'):
+        payload['state'] = payload.pop('status').lower()
+
+    headers = {
+        'Authorization': sender
+    }
+
+    response = requests.patch(url=url, data=json.dumps(payload), headers=headers)
+    if response.ok:
+        return response.json()
+    if response.status_code == 401:
+        raise ExternalServiceError(error_code=401, message=response.json().get('message'))
+
+    else:
+        raise ExternalServiceError()
