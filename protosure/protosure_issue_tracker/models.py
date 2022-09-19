@@ -54,6 +54,7 @@ class IssueMetadata(models.Model):
     comment_count = models.IntegerField(default=0)
     comments_url = URLField(max_length=300)
     repository = models.ForeignKey(RepositoryInfo, on_delete=models.CASCADE)
+    version = models.IntegerField(default=0)
     objects = IssueMetadataCustomManager()
 
     class Meta:

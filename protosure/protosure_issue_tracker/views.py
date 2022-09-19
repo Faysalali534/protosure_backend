@@ -1,6 +1,6 @@
 from django.http import Http404
 
-from protosure.custom_exception import ExternalServiceError
+from protosure.custom_exception import ExternalServiceError, concurrencyError
 from protosure_issue_tracker.models import IssueMetadata, IssueComments
 from protosure_issue_tracker.serializers import IssueMetadataSerializer, IssueCommentsSerializer
 from rest_framework.views import APIView
@@ -49,6 +49,8 @@ class IssueUpdate(APIView):
             return Response(dict(error=str(error_msg[0])), status=status.HTTP_400_BAD_REQUEST)
         except db_constraint:
             return Response(dict(error='Status for this issue cannot be closed'), status=status.HTTP_400_BAD_REQUEST)
+        except concurrencyError as e:
+            return Response(dict(error=e.message), status=e.error_code)
 
 
 class IssueComment(APIView):
