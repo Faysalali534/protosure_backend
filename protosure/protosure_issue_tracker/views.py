@@ -37,9 +37,14 @@ class RepoInfo(APIView):
             IssueMetadata.objects.bulk_update(issue_metadata_objects, ['status'])
 
     def put(self, request, owner, repo, format=None):
+        from protosure.celery import update_bulk_issue_task
         try:
             sync_issues.send(sender=request.headers.get('authorization'), owner=owner, repo=repo)
             self._get_bulk_update(data=request.data, owner=owner, repository=repo)
+            # Calls celery for updating on github
+            update_bulk_issue_task.delay(
+                owner, repo, dict(sender=request.headers.get("authorization"), data=request.data)
+            )
             return Response(dict(message="bulk update was performed"))
         except ExternalServiceError as e:
             return Response(dict(error=e.message), status=e.error_code)
