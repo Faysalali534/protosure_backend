@@ -103,4 +103,6 @@ class GithubSuccessScenarioTestCase(TestCase):
         response = GithubSuccessScenarioTestCase.client.patch(path=api_url, data=data, format='json')
         assert response.status_code == 200
         issue_metadata_after_update = IssueMetadata.objects.filter(title__exact=data['title'])
+
         assert issue_metadata_after_update
+        assert issue_metadata_after_update[0].version > 0
