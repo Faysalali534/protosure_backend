@@ -86,7 +86,7 @@ class GithubSuccessScenarioTestCase(TestCase):
 
     @patch('protosure_issue_tracker.services.requests.patch')
     @patch('protosure_issue_tracker.services.requests.get')
-    def test_filter_fields(self, mock_get, mock_patch):
+    def test_issue_update(self, mock_get, mock_patch):
         mock_get.return_value.ok = True
         mock_patch.return_value.ok = True
         mock_get.return_value.json.return_value = self.mock_data['get_latest_issues']

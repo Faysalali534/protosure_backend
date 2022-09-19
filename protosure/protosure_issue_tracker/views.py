@@ -19,6 +19,42 @@ class RepoInfo(APIView):
         serializer = IssueMetadataSerializer(repo_issues_metadata, many=True)
         return Response(serializer.data)
 
+    def _get_bulk_update(self, data, repository, owner):
+        STATUS_CHOICES = ['Draft', 'Open', 'Closed', 'Merged']
+        issue_metadata_objects = []
+        for update_record in data:
+            issue_metadata_instances = IssueMetadata.objects.does_issue_number_exist(
+                owner=owner, repository=repository, issue_number=update_record["issue_number"]
+            )
+            if issue_metadata_instances and update_record['status'] in STATUS_CHOICES:
+                issue_metadata_instances[0].status = update_record['status']
+                issue_metadata_objects.append(issue_metadata_instances[0])
+            elif update_record['status'] not in STATUS_CHOICES:
+                raise ExternalServiceError(
+                    message=f"issue number : {update_record['issue_number']} had incorrect status")
+
+        if issue_metadata_objects:
+            IssueMetadata.objects.bulk_update(issue_metadata_objects, ['status'])
+
+    def put(self, request, owner, repo, format=None):
+        from protosure.celery import update_bulk_issue_task
+        try:
+            sync_issues.send(sender=request.headers.get('authorization'), owner=owner, repo=repo)
+            self._get_bulk_update(data=request.data, owner=owner, repository=repo)
+            # Calls celery for updating on github
+            update_bulk_issue_task.delay(
+                owner, repo, dict(sender=request.headers.get("authorization"), data=request.data)
+            )
+            return Response(dict(message="bulk update was performed"))
+        except ExternalServiceError as e:
+            return Response(dict(error=e.message), status=e.error_code)
+        except db_constraint as e:
+            return Response(dict(error='Draft and WIP issue cannot be closed'), status=status.HTTP_400_BAD_REQUEST)
+        except concurrencyError as e:
+            return Response(dict(error=e.message), status=e.error_code)
+        except Exception as e:
+            print(e)
+
 
 class IssueUpdate(APIView):
     def get_object(self, owner, repo, issue):
@@ -38,7 +74,7 @@ class IssueUpdate(APIView):
                 data=request.data,
                 partial=True,
                 context=dict(
-                    update_date=True,
+                    update=True,
                     issue_number=issue,
                     owner=owner,
                     sender=request.headers.get("authorization"),
@@ -60,8 +96,6 @@ class IssueUpdate(APIView):
         except db_constraint:
             return Response(dict(error='Status for this issue cannot be closed'), status=status.HTTP_400_BAD_REQUEST)
         except concurrencyError as e:
-            return Response(dict(error=e.message), status=e.error_code)
-        except ExternalServiceError as e:
             return Response(dict(error=e.message), status=e.error_code)
 
 
