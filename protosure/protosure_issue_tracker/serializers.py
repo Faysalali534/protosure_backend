@@ -13,13 +13,6 @@ class IssueMetadataSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # This version is used to handle concurrency issue
-        update_issue.send(
-            issue_id=self.context["issue_number"],
-            sender=self.context["sender"],
-            owner=self.context["owner"],
-            repo=self.context["repo"],
-            data=dict(self.validated_data),
-        )
         initial_version = instance.version
         issue_metadata = IssueMetadata.objects.filter(pk=instance.pk)
 
@@ -33,6 +26,13 @@ class IssueMetadataSerializer(serializers.ModelSerializer):
         if not updated:
             raise concurrencyError()
         issue_metadata_instance = IssueMetadata.objects.filter(pk=instance.pk)
+        update_issue.send(
+            issue_id=self.context["issue_number"],
+            sender=self.context["sender"],
+            owner=self.context["owner"],
+            repo=self.context["repo"],
+            data=dict(self.validated_data),
+        )
 
         return issue_metadata_instance[0]
 
