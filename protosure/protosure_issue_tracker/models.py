@@ -2,8 +2,7 @@ import datetime
 
 from django.db import models
 
-
-from django.db.models import Q
+from django.db.models import Q, When
 from django.forms import URLField
 
 
@@ -56,6 +55,15 @@ class IssueMetadata(models.Model):
     comments_url = URLField(max_length=300)
     repository = models.ForeignKey(RepositoryInfo, on_delete=models.CASCADE)
     objects = IssueMetadataCustomManager()
+
+    class Meta:
+        constraints = [
+
+            models.CheckConstraint(
+                check=(~Q(title__contains="WIP") & ~Q(title__contains="DRAFT") & ~Q(status="Closed")),
+                name='title_status_IssueMetadata_should_not_close_check'
+            )
+        ]
 
 
 class IssueCommentsCustomManager(models.Manager):
