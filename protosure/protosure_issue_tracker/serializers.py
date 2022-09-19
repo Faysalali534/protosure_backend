@@ -37,7 +37,7 @@ class IssueMetadataSerializer(serializers.ModelSerializer):
         return issue_metadata_instance[0]
 
     def validate(self, data):
-        if not self.context.get('update_date'):
+        if not self.context.get('update'):
             is_metadata_being_repeated = IssueMetadata.objects.is_metadata_being_repeated(issue_number=data['number'],
                                                                                           repository=self.initial_data[
                                                                                               'repository'])
