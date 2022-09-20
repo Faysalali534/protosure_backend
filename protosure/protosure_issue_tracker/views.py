@@ -156,7 +156,6 @@ def capture_webhook_data(request):
             issue_metadata_instance = IssueMetadata.objects.does_issue_number_exist(repository=repo_name, owner=owner,
                                                                                     issue_number=issue_number)
             # the signal will process recent changes
-            issue_metadata_instance.delete()
 
             return Response({"message": "processed"})
     return Response({"message": "done"})
