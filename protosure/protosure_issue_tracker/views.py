@@ -129,6 +129,9 @@ class IssueDataFilter(generics.ListAPIView):
     def get_queryset(self):
         owner = self.kwargs.get('owner')
         repo = self.kwargs.get('repo')
+        sync_issues.send(
+            sender=self.request.headers.get("authorization"), owner=owner, repo=repo
+        )
         creation_date = self.request.query_params.get('creation_date')
         status = self.request.query_params.get('status')
         number = self.request.query_params.get('number')
