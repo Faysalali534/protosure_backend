@@ -1,0 +1,721 @@
+{
+	"info": {
+		"_postman_id": "a2272d41-f7bd-4d7c-a244-4c7f81377a13",
+		"name": "Github Interaction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bulk update for Issues",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer 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"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"status\": \"Open\",\n        \"issue_number\": 1\n    },\n    {\n        \"status\": \"Open\",\n        \"issue_number\": 2\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task",
+					"host": [
+						"{{host_protosure}}repo"
+					],
+					"path": [
+						"issues",
+						"Faysalali534",
+						"Backend-Task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch all issues",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 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",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task",
+					"host": [
+						"{{host_protosure}}repo"
+					],
+					"path": [
+						"issues",
+						"Faysalali534",
+						"Backend-Task"
+					]
+				},
+				"description": "This API will help you to fetch all the recent issues"
+			},
+			"response": [
+				{
+					"name": "Fetch all issues",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer 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",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task",
+							"host": [
+								"{{host_protosure}}repo"
+							],
+							"path": [
+								"issues",
+								"Faysalali534",
+								"Backend-Task"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sun, 18 Sep 2022 20:44:58 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.8.13"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "958"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 5,\n        \"number\": 1,\n        \"title\": \"Found 1 bug\",\n        \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n        \"status\": \"Open\",\n        \"creation_date\": \"2022-09-17\",\n        \"comment_count\": 2,\n        \"repository\": {\n            \"id\": 1,\n            \"repository_name\": \"Backend-Task\",\n            \"repository_owner\": \"Faysalali534\"\n        }\n    },\n    {\n        \"id\": 6,\n        \"number\": 1,\n        \"title\": \"Found 1 bug\",\n        \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n        \"status\": \"Open\",\n        \"creation_date\": \"2022-09-17\",\n        \"comment_count\": 2,\n        \"repository\": {\n            \"id\": 1,\n            \"repository_name\": \"Backend-Task\",\n            \"repository_owner\": \"Faysalali534\"\n        }\n    },\n    {\n        \"id\": 7,\n        \"number\": 1,\n        \"title\": \"Found 1 bug\",\n        \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n        \"status\": \"Open\",\n        \"creation_date\": \"2022-09-17\",\n        \"comment_count\": 2,\n        \"repository\": {\n            \"id\": 1,\n            \"repository_name\": \"Backend-Task\",\n            \"repository_owner\": \"Faysalali534\"\n        }\n    },\n    {\n        \"id\": 8,\n        \"number\": 2,\n        \"title\": \"Found 2 bug\",\n        \"description\": \"checking\\r\\ncadascas\",\n        \"status\": \"Open\",\n        \"creation_date\": \"2022-09-17\",\n        \"comment_count\": 0,\n        \"repository\": {\n            \"id\": 1,\n            \"repository_name\": \"Backend-Task\",\n            \"repository_owner\": \"Faysalali534\"\n        }\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Update Issue",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer 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"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/update/1",
+					"host": [
+						"{{host_protosure}}repo"
+					],
+					"path": [
+						"issues",
+						"Faysalali534",
+						"Backend-Task",
+						"update",
+						"1"
+					]
+				},
+				"description": "This API will update the issue data for you\n\n> status cannot be closed if tittle has \"WIP\" or \"DRAFT\""
+			},
+			"response": [
+				{
+					"name": "Update Issue (when DB constraint is voilated)",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer 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"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Found  DRAFT 3 bug\",\n    \"status\" : \"Closed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/update/1",
+							"host": [
+								"{{host_protosure}}repo"
+							],
+							"path": [
+								"issues",
+								"Faysalali534",
+								"Backend-Task",
+								"update",
+								"1"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 19 Sep 2022 12:15:32 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.8.13"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "PATCH, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "50"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"Status for this issue cannot be closed\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Add comments to Issue",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer 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"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"comment\": \"looks amazing\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/comment/1",
+					"host": [
+						"{{host_protosure}}repo"
+					],
+					"path": [
+						"issues",
+						"Faysalali534",
+						"Backend-Task",
+						"comment",
+						"1"
+					]
+				},
+				"description": "This API is used to add comment to a specific issue"
+			},
+			"response": [
+				{
+					"name": "internal add comments (success response)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer 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"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"comment\": \"looks amazing\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/comment/1",
+							"host": [
+								"{{host_protosure}}repo"
+							],
+							"path": [
+								"issues",
+								"Faysalali534",
+								"Backend-Task",
+								"comment",
+								"1"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sun, 18 Sep 2022 15:16:36 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.8.13"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "314"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 4,\n    \"comment\": \"looks amazing\",\n    \"comment_number\": \"1250329548\",\n    \"issue\": {\n        \"id\": 7,\n        \"number\": 1,\n        \"title\": \"Found 1 bug\",\n        \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n        \"status\": \"Open\",\n        \"creation_date\": \"2022-09-17\",\n        \"comment_count\": 2,\n        \"repository\": {\n            \"id\": 1,\n            \"repository_name\": \"Backend-Task\",\n            \"repository_owner\": \"Faysalali534\"\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "webhook",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer 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",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"comment\": \"looks amazing\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host_protosure}}github",
+					"host": [
+						"{{host_protosure}}github"
+					]
+				},
+				"description": "This API is used to add comment to a specific issue"
+			},
+			"response": [
+				{
+					"name": "internal add comments (success response)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer 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"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"comment\": \"looks amazing\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/comment/1",
+							"host": [
+								"{{host_protosure}}repo"
+							],
+							"path": [
+								"issues",
+								"Faysalali534",
+								"Backend-Task",
+								"comment",
+								"1"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sun, 18 Sep 2022 15:16:36 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.8.13"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "314"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 4,\n    \"comment\": \"looks amazing\",\n    \"comment_number\": \"1250329548\",\n    \"issue\": {\n        \"id\": 7,\n        \"number\": 1,\n        \"title\": \"Found 1 bug\",\n        \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n        \"status\": \"Open\",\n        \"creation_date\": \"2022-09-17\",\n        \"comment_count\": 2,\n        \"repository\": {\n            \"id\": 1,\n            \"repository_name\": \"Backend-Task\",\n            \"repository_owner\": \"Faysalali534\"\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "webhook test ngrok",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer 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"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"comment\": \"looks amazing\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/comment/1",
+					"host": [
+						"{{host_protosure}}repo"
+					],
+					"path": [
+						"issues",
+						"Faysalali534",
+						"Backend-Task",
+						"comment",
+						"1"
+					]
+				},
+				"description": "This API is used to add comment to a specific issue"
+			},
+			"response": [
+				{
+					"name": "internal add comments (success response)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer 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"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"comment\": \"looks amazing\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/comment/1",
+							"host": [
+								"{{host_protosure}}repo"
+							],
+							"path": [
+								"issues",
+								"Faysalali534",
+								"Backend-Task",
+								"comment",
+								"1"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sun, 18 Sep 2022 15:16:36 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.8.13"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "POST, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "314"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 4,\n    \"comment\": \"looks amazing\",\n    \"comment_number\": \"1250329548\",\n    \"issue\": {\n        \"id\": 7,\n        \"number\": 1,\n        \"title\": \"Found 1 bug\",\n        \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n        \"status\": \"Open\",\n        \"creation_date\": \"2022-09-17\",\n        \"comment_count\": 2,\n        \"repository\": {\n            \"id\": 1,\n            \"repository_name\": \"Backend-Task\",\n            \"repository_owner\": \"Faysalali534\"\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Filter Data",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer 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"
+					}
+				],
+				"url": {
+					"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/filter?status=open&creation_date=2022-09-17",
+					"host": [
+						"{{host_protosure}}repo"
+					],
+					"path": [
+						"issues",
+						"Faysalali534",
+						"Backend-Task",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "open"
+						},
+						{
+							"key": "creation_date",
+							"value": "2022-09-17"
+						},
+						{
+							"key": "title",
+							"value": "2",
+							"disabled": true
+						}
+					]
+				},
+				"description": "This API looks for different fields and filter them on basis of value\n\n| fields      | Description |\n| ----------- | ----------- |\n| status      | It represents status of the issue       |\n| number   | It represents number of the issue     |\n| creation_date   | the format is  \"2022-09-17\"       |\n| title   | It represents title of the issue      |\n| comment   | It represents comments of the issue      |\n| description   | It represents description of the issue      |\n| owner   | It is required in URL      |\n| repo name   | It is required in URL      |\n\n\n> you can use multicondition with params , for this you can visit documentation"
+			},
+			"response": [
+				{
+					"name": "Filter Data with status and date",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer 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"
+							}
+						],
+						"url": {
+							"raw": "{{host_protosure}}repo/issues/Faysalali534/Backend-Task/filter?status=open&creation_date=2022-09-17",
+							"host": [
+								"{{host_protosure}}repo"
+							],
+							"path": [
+								"issues",
+								"Faysalali534",
+								"Backend-Task",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "open"
+								},
+								{
+									"key": "creation_date",
+									"value": "2022-09-17"
+								},
+								{
+									"key": "title",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sun, 18 Sep 2022 20:36:11 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "WSGIServer/0.2 CPython/3.8.13"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept, Cookie"
+						},
+						{
+							"key": "Allow",
+							"value": "GET, HEAD, OPTIONS"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1256"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "same-origin"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 3,\n        \"comment\": \"looks amazing\",\n        \"comment_number\": \"1250328202\",\n        \"issue\": {\n            \"id\": 8,\n            \"number\": 2,\n            \"title\": \"Found 2 bug\",\n            \"description\": \"checking\\r\\ncadascas\",\n            \"status\": \"Open\",\n            \"creation_date\": \"2022-09-17\",\n            \"comment_count\": 0,\n            \"repository\": {\n                \"id\": 1,\n                \"repository_name\": \"Backend-Task\",\n                \"repository_owner\": \"Faysalali534\"\n            }\n        }\n    },\n    {\n        \"id\": 1,\n        \"comment\": \"changing comment\",\n        \"comment_number\": \"1250328043\",\n        \"issue\": {\n            \"id\": 7,\n            \"number\": 1,\n            \"title\": \"Found 1 bug\",\n            \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n            \"status\": \"Open\",\n            \"creation_date\": \"2022-09-17\",\n            \"comment_count\": 2,\n            \"repository\": {\n                \"id\": 1,\n                \"repository_name\": \"Backend-Task\",\n                \"repository_owner\": \"Faysalali534\"\n            }\n        }\n    },\n    {\n        \"id\": 2,\n        \"comment\": \"changing comment\",\n        \"comment_number\": \"1250328126\",\n        \"issue\": {\n            \"id\": 7,\n            \"number\": 1,\n            \"title\": \"Found 1 bug\",\n            \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n            \"status\": \"Open\",\n            \"creation_date\": \"2022-09-17\",\n            \"comment_count\": 2,\n            \"repository\": {\n                \"id\": 1,\n                \"repository_name\": \"Backend-Task\",\n                \"repository_owner\": \"Faysalali534\"\n            }\n        }\n    },\n    {\n        \"id\": 4,\n        \"comment\": \"looks amazing\",\n        \"comment_number\": \"1250329548\",\n        \"issue\": {\n            \"id\": 7,\n            \"number\": 1,\n            \"title\": \"Found 1 bug\",\n            \"description\": \"casdasccccascascasc\\r\\ncadascas\",\n            \"status\": \"Open\",\n            \"creation_date\": \"2022-09-17\",\n            \"comment_count\": 2,\n            \"repository\": {\n                \"id\": 1,\n                \"repository_name\": \"Backend-Task\",\n                \"repository_owner\": \"Faysalali534\"\n            }\n        }\n    }\n]"
+				}
+			]
+		}
+	]
+}

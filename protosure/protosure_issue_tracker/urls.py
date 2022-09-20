@@ -7,5 +7,6 @@ urlpatterns = [
     path('repo/issues/<str:owner>/<str:repo>/comment/<int:issue>', views.IssueComment.as_view(), name='issue_comment'),
     path('repo/issues/<str:owner>/<str:repo>/filter', views.IssueDataFilter.as_view(), name='filter_data'),
     path('repo/issues/<str:owner>/<str:repo>/update/<int:issue>', views.IssueUpdate.as_view(), name='issue_update'),
+    path('github', views.capture_webhook_data, name="webhook_controller"),
 
 ]
